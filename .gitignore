@@ -1,0 +1,172 @@
+############################################
+# ============== BACKEND ================= #
+############################################
+
+# Python bytecode
+Backend/__pycache__/
+Backend/**/*.py[cod]
+*$py.class
+
+# C extensions
+Backend/**/*.so
+
+# Distribution / packaging
+Backend/.Python
+Backend/build/
+Backend/develop-eggs/
+Backend/dist/
+Backend/downloads/
+Backend/eggs/
+Backend/.eggs/
+Backend/lib/
+Backend/lib64/
+Backend/parts/
+Backend/sdist/
+Backend/var/
+Backend/wheels/
+Backend/share/python-wheels/
+Backend/*.egg-info/
+Backend/.installed.cfg
+Backend/*.egg
+Backend/MANIFEST
+
+# PyInstaller
+Backend/*.manifest
+Backend/*.spec
+
+# Installer logs
+Backend/pip-log.txt
+Backend/pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+Backend/htmlcov/
+Backend/.tox/
+Backend/.nox/
+Backend/.coverage
+Backend/.coverage.*
+Backend/.cache
+Backend/nosetests.xml
+Backend/coverage.xml
+Backend/*.cover
+Backend/*.py,cover
+Backend/.hypothesis/
+Backend/.pytest_cache/
+Backend/cover/
+
+# Translations
+Backend/*.mo
+Backend/*.pot
+
+# Django / Flask / general Python stuff
+Backend/*.log
+Backend/local_settings.py
+Backend/db.sqlite3*
+Backend/instance/
+Backend/.webassets-cache
+Backend/.scrapy
+
+# Sphinx docs
+Backend/docs/_build/
+
+# PyBuilder
+Backend/.pybuilder/
+Backend/target/
+
+# Jupyter
+Backend/.ipynb_checkpoints
+
+# IPython
+Backend/profile_default/
+Backend/ipython_config.py
+
+# pyenv
+# .python-version
+
+# pipenv / poetry / pdm / uv
+Backend/Pipfile.lock
+Backend/uv.lock
+Backend/poetry.lock
+Backend/pdm.lock
+Backend/.pdm.toml
+Backend/.pdm-python
+Backend/.pdm-build/
+
+# PEP 582
+Backend/__pypackages__/
+
+# Celery
+Backend/celerybeat-schedule
+Backend/celerybeat.pid
+
+# SageMath
+Backend/*.sage.py
+
+# Environments
+Backend/.env
+Backend/.venv
+Backend/env/
+Backend/venv/
+Backend/ENV/
+Backend/env.bak/
+Backend/venv.bak/
+
+# IDEs
+Backend/.spyderproject
+Backend/.spyproject
+Backend/.ropeproject
+
+# Static analysis
+Backend/.mypy_cache/
+Backend/.dmypy.json
+Backend/dmypy.json
+Backend/.pyre/
+Backend/.pytype/
+Backend/cython_debug/
+Backend/.ruff_cache/
+
+# PyPI config
+Backend/.pypirc
+
+# JetBrains
+#Backend/.idea/
+
+############################################
+# ============== FRONTEND ================ #
+############################################
+
+# Node modules
+Frontend/node_modules/
+
+# Production build
+Frontend/build/
+Frontend/dist/
+
+# Logs
+Frontend/npm-debug.log*
+Frontend/yarn-debug.log*
+Frontend/yarn-error.log*
+
+# Environment files
+Frontend/.env
+Frontend/.env.*.local
+Frontend/.env.local
+
+# Testing
+Frontend/coverage/
+
+# Cache
+Frontend/.cache/
+Frontend/.parcel-cache/
+Frontend/.turbo/
+Frontend/.tailwindcache/
+
+# Editor/IDE
+Frontend/.vscode/
+Frontend/.idea/
+
+# System
+Frontend/.DS_Store
+
+# Lock files (опционально)
+Frontend/yarn.lock
+Frontend/pnpm-lock.yaml
