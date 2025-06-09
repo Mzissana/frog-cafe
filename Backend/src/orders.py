@@ -315,15 +315,15 @@ def clear_orders():
     cur = conn.cursor()
 
     try:
-        # Start transaction
         cur.execute("BEGIN;")
 
-        # Delete all orders
+        # Удаляем сначала все элементы корзины (cart)
+        cur.execute("DELETE FROM frog_cafe.cart;")
+
+        # Теперь удаляем все заказы
         cur.execute("DELETE FROM frog_cafe.orders;")
         
-        # Commit transaction
         conn.commit()
-        
     except Exception as e:
         conn.rollback()
         raise HTTPException(
@@ -333,5 +333,3 @@ def clear_orders():
     finally:
         cur.close()
         conn.close()
-
-    return  # FastAPI автоматически вернёт 204 No Content

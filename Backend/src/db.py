@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_db_connection():
-    return psycopg2.connect(
+    conn = psycopg2.connect(
         dbname=os.getenv("DB_NAME"),
         user=os.getenv("DB_USER"),
         password=os.getenv("DB_PASSWORD"),
@@ -18,3 +18,6 @@ def get_db_connection():
         port=os.getenv("DB_PORT"),
         cursor_factory=RealDictCursor
     )
+    with conn.cursor() as cur:
+        cur.execute("SET search_path TO frog_cafe")
+    return conn
