@@ -13,7 +13,7 @@ export default function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <Router>
+        <Router basename="/frog-cafe/">
           <Routes>
             <Route path="/login" element={<Login />} />
 
