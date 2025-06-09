@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://mzissana.github.io/frog-cafe",
+  "homepage": "https://mzissana.github.io/frog-cafe/login",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
