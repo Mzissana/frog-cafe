@@ -15,7 +15,7 @@ export default function App() {
       <CartProvider>
         <Router basename={import.meta.env.BASE_URL}>
           <Routes>
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Login />} />
 
             <Route
               path="/menu"
