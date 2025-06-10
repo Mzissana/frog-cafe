@@ -7,6 +7,8 @@ load_dotenv()
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+
+
 from src.auth import router as auth_router
 from src.menu import router as menu_router
 from src.users import router as users_router
@@ -23,10 +25,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 # Disable automatic trailing slash redirect
 app = FastAPI(redirect_slashes=False)
 
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+app.add_middleware(HTTPSRedirectMiddleware)
 
 origins = [
     "https://mzissana.github.io"
 ]
+
 
 app.add_middleware(
     CORSMiddleware,
