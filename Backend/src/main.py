@@ -23,15 +23,9 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 # Disable automatic trailing slash redirect
 app = FastAPI(redirect_slashes=False)
 
-# Configure CORS
-# Замените YOUR_IP_ADDRESS на IP-адрес вашего компьютера в локальной сети
 
 origins = [
-    "http://localhost:5173",  # Vite dev server
-    "http://127.0.0.1:5173",
-    "http://localhost:8000",  # FastAPI backend
-    "http://127.0.0.1:8000",
-    "*"  # Allow all origins during development
+    "https://mzissana.github.io"
 ]
 
 app.add_middleware(
@@ -41,7 +35,7 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
     expose_headers=["*"],
-    max_age=86400,  # Cache preflight requests for 24 hours
+    max_age=86400, 
 )
 
 # Create a sub-application for /api routes

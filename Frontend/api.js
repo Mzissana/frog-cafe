@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Замените YOUR_IP_ADDRESS на IP-адрес вашего компьютера в локальной сети
 const API_BASE_URL = "https://frog-cafe-production.up.railway.app";
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -10,7 +9,6 @@ const api = axios.create({
   maxRedirects: 0,
 });
 
-// Add a request interceptor to add the auth token to requests
 api.interceptors.request.use((config) => {
   console.log("Request interceptor called");
   const token = localStorage.getItem("token");
@@ -32,7 +30,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Add a response interceptor to handle redirects manually
 api.interceptors.response.use(
   (response) => {
     console.log("Response received:", {
