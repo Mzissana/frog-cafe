@@ -23,8 +23,8 @@ def get_orders(current_user=Depends(get_current_user)):
                 o.id,
                 o.created_at,
                 s.name as status
-            FROM frog_cafe.orders o
-            JOIN frog_cafe.order_statuses s ON o.status_id = s.id
+            FROM public.orders o
+            JOIN public.order_statuses s ON o.status_id = s.id
             ORDER BY o.created_at DESC;
         """)
         orders = cur.fetchall()
@@ -41,8 +41,8 @@ def get_orders(current_user=Depends(get_current_user)):
                     m.category,
                     m.quantity_left,
                     COUNT(*) as quantity
-                FROM frog_cafe.cart c
-                JOIN frog_cafe.menu m ON c.menu_item = m.id
+                FROM public.cart c
+                JOIN public.menu m ON c.menu_item = m.id
                 WHERE c.order_id = %s
                 GROUP BY m.id, m.dish_name, m.image, m.is_available, 
                          m.description, m.category, m.quantity_left;
@@ -74,7 +74,7 @@ def create_order(current_user=Depends(get_current_user)):
 
         # Get available toad
         cur.execute("""
-            SELECT id FROM frog_cafe.toads 
+            SELECT id FROM public.toads 
             WHERE is_taken = false 
             ORDER BY id 
             LIMIT 1 
@@ -86,7 +86,7 @@ def create_order(current_user=Depends(get_current_user)):
         if toad:
             # Mark toad as taken
             cur.execute("""
-                UPDATE frog_cafe.toads 
+                UPDATE public.toads 
                 SET is_taken = true 
                 WHERE id = %s;
             """, (toad_id,))
@@ -94,7 +94,7 @@ def create_order(current_user=Depends(get_current_user)):
         # Get initial order status
         cur.execute("""
             SELECT id, name 
-            FROM frog_cafe.order_statuses 
+            FROM public.order_statuses 
             WHERE name = 'Создан' 
             LIMIT 1;
         """)
@@ -108,7 +108,7 @@ def create_order(current_user=Depends(get_current_user)):
 
         # Create order
         cur.execute("""
-            INSERT INTO frog_cafe.orders (user_id, toad_id, status_id)
+            INSERT INTO public.orders (user_id, toad_id, status_id)
             VALUES (%s, %s, %s)
             RETURNING id, created_at;
         """, (current_user["user_id"], toad_id, status["id"]))
@@ -149,7 +149,7 @@ def create_order(current_user=Depends(get_current_user)):
 def get_order(order_id: int, current_user=Depends(get_current_user)):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT * FROM frog_cafe.orders WHERE id = %s;", (order_id,))
+    cur.execute("SELECT * FROM public.orders WHERE id = %s;", (order_id,))
     order = cur.fetchone()
     cur.close()
     conn.close()
@@ -173,7 +173,7 @@ def update_order_status(order_id: int, update: OrderStatusUpdate, current_user=D
         # Check if order exists
         cur.execute("""
             SELECT id, status_id 
-            FROM frog_cafe.orders 
+            FROM public.orders 
             WHERE id = %s;
         """, (order_id,))
         order = cur.fetchone()
@@ -183,7 +183,7 @@ def update_order_status(order_id: int, update: OrderStatusUpdate, current_user=D
 
         # Update order status
         cur.execute("""
-            UPDATE frog_cafe.orders
+            UPDATE public.orders
             SET status_id = %s
             WHERE id = %s
             RETURNING id, created_at;
@@ -196,7 +196,7 @@ def update_order_status(order_id: int, update: OrderStatusUpdate, current_user=D
         # Get the new status name
         cur.execute("""
             SELECT name 
-            FROM frog_cafe.order_statuses 
+            FROM public.order_statuses 
             WHERE id = %s;
         """, (update.status_id,))
         status = cur.fetchone()
@@ -215,8 +215,8 @@ def update_order_status(order_id: int, update: OrderStatusUpdate, current_user=D
                 m.category,
                 m.quantity_left,
                 COUNT(*) as quantity
-            FROM frog_cafe.cart c
-            JOIN frog_cafe.menu m ON c.menu_item = m.id
+            FROM public.cart c
+            JOIN public.menu m ON c.menu_item = m.id
             WHERE c.order_id = %s
             GROUP BY m.id, m.dish_name, m.image, m.is_available, 
                      m.description, m.category, m.quantity_left;
@@ -256,8 +256,8 @@ def delete_order(order_id: int, current_user=Depends(get_current_user)):
         # Check if order exists and get its status
         cur.execute("""
             SELECT o.id, o.toad_id, s.name as status
-            FROM frog_cafe.orders o
-            JOIN frog_cafe.order_statuses s ON o.status_id = s.id
+            FROM public.orders o
+            JOIN public.order_statuses s ON o.status_id = s.id
             WHERE o.id = %s;
         """, (order_id,))
         order = cur.fetchone()
@@ -275,16 +275,16 @@ def delete_order(order_id: int, current_user=Depends(get_current_user)):
         # Free the toad if it exists
         if order["toad_id"]:
             cur.execute("""
-                UPDATE frog_cafe.toads 
+                UPDATE public.toads 
                 SET is_taken = false 
                 WHERE id = %s;
             """, (order["toad_id"],))
 
         # Delete cart items first (due to foreign key constraint)
-        cur.execute("DELETE FROM frog_cafe.cart WHERE order_id = %s;", (order_id,))
+        cur.execute("DELETE FROM public.cart WHERE order_id = %s;", (order_id,))
 
         # Delete the order
-        cur.execute("DELETE FROM frog_cafe.orders WHERE id = %s RETURNING id;", (order_id,))
+        cur.execute("DELETE FROM public.orders WHERE id = %s RETURNING id;", (order_id,))
         deleted = cur.fetchone()
 
         if not deleted:
@@ -318,10 +318,10 @@ def clear_orders():
         cur.execute("BEGIN;")
 
         # Удаляем сначала все элементы корзины (cart)
-        cur.execute("DELETE FROM frog_cafe.cart;")
+        cur.execute("DELETE FROM public.cart;")
 
         # Теперь удаляем все заказы
-        cur.execute("DELETE FROM frog_cafe.orders;")
+        cur.execute("DELETE FROM public.orders;")
         
         conn.commit()
     except Exception as e:

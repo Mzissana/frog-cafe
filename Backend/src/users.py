@@ -10,7 +10,7 @@ router = APIRouter(prefix="/api/users", tags=["users"])
 def get_users():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, name, role_id FROM frog_cafe.users ORDER BY id")
+    cur.execute("SELECT id, name, role_id FROM public.users ORDER BY id")
     users = cur.fetchall()
     cur.close()
     conn.close()
@@ -23,7 +23,7 @@ def create_user(user: UserCreate):
     cur = conn.cursor()
 
     # Проверка, существует ли пользователь с таким именем
-    cur.execute("SELECT * FROM frog_cafe.users WHERE name = %s", (user.name,))
+    cur.execute("SELECT * FROM public.users WHERE name = %s", (user.name,))
     existing = cur.fetchone()
 
     if existing:
@@ -33,7 +33,7 @@ def create_user(user: UserCreate):
 
     # Вставка нового пользователя
     cur.execute("""
-        INSERT INTO frog_cafe.users (name, pass, role_id)
+        INSERT INTO public.users (name, pass, role_id)
         VALUES (%s, %s, %s)
         RETURNING id, name, role_id
     """, (user.name, user.password, user.role_id))
@@ -51,7 +51,7 @@ def create_user(user: UserCreate):
 def get_user(user_id: int):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, name, role_id FROM frog_cafe.users WHERE id = %s", (user_id,))
+    cur.execute("SELECT id, name, role_id FROM public.users WHERE id = %s", (user_id,))
     user = cur.fetchone()
     cur.close()
     conn.close()
@@ -69,7 +69,7 @@ def update_user(user_id: int, updated: UserCreate):
     cur = conn.cursor()
 
     # Проверим, существует ли пользователь
-    cur.execute("SELECT * FROM frog_cafe.users WHERE id = %s", (user_id,))
+    cur.execute("SELECT * FROM public.users WHERE id = %s", (user_id,))
     existing = cur.fetchone()
 
     if not existing:
@@ -79,7 +79,7 @@ def update_user(user_id: int, updated: UserCreate):
 
     # Обновляем пользователя
     cur.execute("""
-        UPDATE frog_cafe.users
+        UPDATE public.users
         SET name = %s, pass = %s, role_id = %s
         WHERE id = %s
         RETURNING id, name, role_id;
@@ -99,7 +99,7 @@ def delete_user(user_id: int):
     conn = get_db_connection()
     cur = conn.cursor()
 
-    cur.execute("DELETE FROM frog_cafe.users WHERE id = %s RETURNING id", (user_id,))
+    cur.execute("DELETE FROM public.users WHERE id = %s RETURNING id", (user_id,))
     deleted = cur.fetchone()
     conn.commit()
     cur.close()

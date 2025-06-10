@@ -16,7 +16,7 @@ def login(login_data: LoginRequest):
     conn = get_db_connection()
     cur = conn.cursor()
     
-    query = "SELECT * FROM frog_cafe.users WHERE name = %s AND pass = %s"
+    query = "SELECT * FROM public.users WHERE name = %s AND pass = %s"
     cur.execute(query, (login_data.username, login_data.password))
     user = cur.fetchone()
     

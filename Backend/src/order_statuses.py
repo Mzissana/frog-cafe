@@ -9,7 +9,7 @@ router = APIRouter(prefix="/api/order_statuses", tags=["order_statuses"])
 def get_statuses():
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, name FROM frog_cafe.order_statuses ORDER BY id")
+    cur.execute("SELECT id, name FROM public.order_statuses ORDER BY id")
     statuses = cur.fetchall()
     cur.close()
     conn.close()
@@ -19,7 +19,7 @@ def get_statuses():
 def create_status(status: OrderStatusCreate):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("INSERT INTO frog_cafe.order_statuses (name) VALUES (%s) RETURNING id, name;", (status.name,))
+    cur.execute("INSERT INTO public.order_statuses (name) VALUES (%s) RETURNING id, name;", (status.name,))
     new_status = cur.fetchone()
     conn.commit()
     cur.close()
@@ -30,7 +30,7 @@ def create_status(status: OrderStatusCreate):
 def get_status(status_id: int):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, name FROM frog_cafe.order_statuses WHERE id = %s;", (status_id,))
+    cur.execute("SELECT id, name FROM public.order_statuses WHERE id = %s;", (status_id,))
     status_item = cur.fetchone()
     cur.close()
     conn.close()
@@ -43,7 +43,7 @@ def update_status(status_id: int, status_data: OrderStatusCreate):
     conn = get_db_connection()
     cur = conn.cursor()
     cur.execute("""
-        UPDATE frog_cafe.order_statuses
+        UPDATE public.order_statuses
         SET name = %s
         WHERE id = %s
         RETURNING id, name;
@@ -60,7 +60,7 @@ def update_status(status_id: int, status_data: OrderStatusCreate):
 def delete_status(status_id: int):
     conn = get_db_connection()
     cur = conn.cursor()
-    cur.execute("DELETE FROM frog_cafe.order_statuses WHERE id = %s RETURNING id;", (status_id,))
+    cur.execute("DELETE FROM public.order_statuses WHERE id = %s RETURNING id;", (status_id,))
     deleted = cur.fetchone()
     conn.commit()
     cur.close()

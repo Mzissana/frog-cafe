@@ -11,7 +11,7 @@ def get_cart(order_id: int, current_user=Depends(get_current_user)):
     cur = conn.cursor()
 
     # Проверка: владелец или админ?
-    cur.execute("SELECT user_id FROM frog_cafe.orders WHERE id = %s;", (order_id,))
+    cur.execute("SELECT user_id FROM public.orders WHERE id = %s;", (order_id,))
     order = cur.fetchone()
 
     if not order:
@@ -30,8 +30,8 @@ def get_cart(order_id: int, current_user=Depends(get_current_user)):
     # Получаем блюда из корзины
     cur.execute("""
         SELECT m.id, m.dish_name, m.image, m.description, m.is_available
-        FROM frog_cafe.cart c
-        JOIN frog_cafe.menu m ON c.menu_item = m.id
+        FROM public.cart c
+        JOIN public.menu m ON c.menu_item = m.id
         WHERE c.order_id = %s
     """, (order_id,))
 
@@ -52,8 +52,8 @@ def add_multiple_to_cart(order_id: int, items: CartAddMultiple, current_user=Dep
         # Check order exists and get its details
         cur.execute("""
             SELECT o.user_id, o.status_id, s.name as status
-            FROM frog_cafe.orders o
-            JOIN frog_cafe.order_statuses s ON o.status_id = s.id
+            FROM public.orders o
+            JOIN public.order_statuses s ON o.status_id = s.id
             WHERE o.id = %s
             FOR UPDATE;
         """, (order_id,))
@@ -86,7 +86,7 @@ def add_multiple_to_cart(order_id: int, items: CartAddMultiple, current_user=Dep
         for menu_item_id in items.menu_items:
             cur.execute("""
                 SELECT id, dish_name, quantity_left, is_available
-                FROM frog_cafe.menu
+                FROM public.menu
                 WHERE id = %s
                 FOR UPDATE;
             """, (menu_item_id,))
@@ -114,13 +114,13 @@ def add_multiple_to_cart(order_id: int, items: CartAddMultiple, current_user=Dep
         for menu_item_id in items.menu_items:
             # Add to cart
             cur.execute("""
-                INSERT INTO frog_cafe.cart (order_id, menu_item)
+                INSERT INTO public.cart (order_id, menu_item)
                 VALUES (%s, %s);
             """, (order_id, menu_item_id))
 
             # Update quantity
             cur.execute("""
-                UPDATE frog_cafe.menu
+                UPDATE public.menu
                 SET quantity_left = quantity_left - 1
                 WHERE id = %s;
             """, (menu_item_id,))
@@ -137,8 +137,8 @@ def add_multiple_to_cart(order_id: int, items: CartAddMultiple, current_user=Dep
                     m.category,
                     m.quantity_left,
                     COUNT(*) as quantity
-                FROM frog_cafe.cart c
-                JOIN frog_cafe.menu m ON c.menu_item = m.id
+                FROM public.cart c
+                JOIN public.menu m ON c.menu_item = m.id
                 WHERE c.order_id = %s
                 GROUP BY m.id, m.dish_name, m.image, m.is_available, m.description, m.category, m.quantity_left
             )
@@ -161,8 +161,8 @@ def add_multiple_to_cart(order_id: int, items: CartAddMultiple, current_user=Dep
                     ) FILTER (WHERE ci.id IS NOT NULL),
                     '[]'::json
                 ) as items
-            FROM frog_cafe.orders o
-            JOIN frog_cafe.order_statuses s ON o.status_id = s.id
+            FROM public.orders o
+            JOIN public.order_statuses s ON o.status_id = s.id
             LEFT JOIN cart_items ci ON true
             WHERE o.id = %s
             GROUP BY o.id, o.created_at, s.name;

@@ -16,7 +16,7 @@ def get_db_connection():
 
     conn.autocommit = True
     with conn.cursor() as cur:
-        cur.execute("SET search_path TO frog_cafe")
+        cur.execute("SET search_path TO public")
 
     return conn
 

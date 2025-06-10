@@ -20,7 +20,7 @@ def get_menu():
         cur = conn.cursor()
         
         logger.info("Executing menu query...")
-        cur.execute("SELECT * FROM frog_cafe.menu ORDER BY id;")
+        cur.execute("SELECT * FROM public.menu ORDER BY id;")
         rows = cur.fetchall()
         
         logger.info(f"Found {len(rows)} menu items")
@@ -40,7 +40,7 @@ def create_menu_item(item: MenuItemCreate):
     cur = conn.cursor()
 
     # Check if dish with same name already exists
-    cur.execute("SELECT id FROM frog_cafe.menu WHERE dish_name = %s", (item.dish_name,))
+    cur.execute("SELECT id FROM public.menu WHERE dish_name = %s", (item.dish_name,))
     existing_item = cur.fetchone()
     if existing_item:
         cur.close()
@@ -48,7 +48,7 @@ def create_menu_item(item: MenuItemCreate):
         raise HTTPException(status_code=400, detail="Блюдо с таким названием уже существует")
 
     cur.execute("""
-        INSERT INTO frog_cafe.menu 
+        INSERT INTO public.menu 
         (dish_name, image, is_available, description, category, quantity_left)
         VALUES (%s, %s, %s, %s, %s, %s)
         RETURNING id, dish_name, image, is_available, description, category, quantity_left;
@@ -75,7 +75,7 @@ def get_menu_item(item_id: int):
     conn = get_db_connection()
     cur = conn.cursor()
 
-    cur.execute("SELECT * FROM frog_cafe.menu WHERE id = %s", (item_id,))
+    cur.execute("SELECT * FROM public.menu WHERE id = %s", (item_id,))
     item = cur.fetchone()
 
     cur.close()
@@ -96,7 +96,7 @@ def update_menu_item(item_id: int, item: MenuItemCreate):
     cur = conn.cursor()
 
     cur.execute("""
-        UPDATE frog_cafe.menu
+        UPDATE public.menu
         SET dish_name = %s,
             image = %s,
             is_available = %s,
@@ -124,7 +124,7 @@ def delete_menu_item(item_id: int):
     conn = get_db_connection()
     cur = conn.cursor()
 
-    cur.execute("DELETE FROM frog_cafe.menu WHERE id = %s RETURNING id;", (item_id,))
+    cur.execute("DELETE FROM public.menu WHERE id = %s RETURNING id;", (item_id,))
     deleted = cur.fetchone()
     conn.commit()
     cur.close()

@@ -35,10 +35,10 @@ def get_display_data(current_user=Depends(get_current_user)):
                         'quantity', COUNT(m.id)
                     )
                 ) AS items
-            FROM frog_cafe.orders o
-            JOIN frog_cafe.order_statuses s ON o.status_id = s.id
-            JOIN frog_cafe.cart c ON o.id = c.order_id
-            JOIN frog_cafe.menu m ON c.menu_item = m.id
+            FROM public.orders o
+            JOIN public.order_statuses s ON o.status_id = s.id
+            JOIN public.cart c ON o.id = c.order_id
+            JOIN public.menu m ON c.menu_item = m.id
             WHERE s.name != 'Выдан'
             GROUP BY o.id, o.created_at, s.name
             ORDER BY o.created_at DESC
@@ -72,10 +72,10 @@ def get_tv_orders(current_user=Depends(get_current_user)):
                     o.id as order_id,
                     m.dish_name,
                     COUNT(*) as quantity
-                FROM frog_cafe.orders o
-                JOIN frog_cafe.order_statuses s ON o.status_id = s.id
-                JOIN frog_cafe.cart c ON o.id = c.order_id
-                JOIN frog_cafe.menu m ON c.menu_item = m.id
+                FROM public.orders o
+                JOIN public.order_statuses s ON o.status_id = s.id
+                JOIN public.cart c ON o.id = c.order_id
+                JOIN public.menu m ON c.menu_item = m.id
                 WHERE s.name IN ('Готовится', 'Готов')
                 GROUP BY o.id, m.dish_name
             )
@@ -92,8 +92,8 @@ def get_tv_orders(current_user=Depends(get_current_user)):
                     ) FILTER (WHERE oi.dish_name IS NOT NULL),
                     '[]'::json
                 ) as items
-            FROM frog_cafe.orders o
-            JOIN frog_cafe.order_statuses s ON o.status_id = s.id
+            FROM public.orders o
+            JOIN public.order_statuses s ON o.status_id = s.id
             LEFT JOIN order_items oi ON o.id = oi.order_id
             WHERE s.name IN ('Готовится', 'Готов')
             GROUP BY o.id, o.created_at, s.name
