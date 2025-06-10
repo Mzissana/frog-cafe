@@ -2,19 +2,21 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import os
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 load_dotenv()
 
 def get_db_connection():
-    conn = psycopg2.connect(
-        dbname=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        host=os.getenv("DB_HOST"),
-        port=os.getenv("DB_PORT"),
-        cursor_factory=RealDictCursor
-    )
+    database_url = os.getenv("DATABASE_URL")
+    if not database_url:
+        raise ValueError("DATABASE_URL environment variable is not set")
+
+    # psycopg2 может принимать URL напрямую начиная с версии 2.7
+    conn = psycopg2.connect(database_url, cursor_factory=RealDictCursor)
+
+    conn.autocommit = True
     with conn.cursor() as cur:
         cur.execute("SET search_path TO frog_cafe")
+
     return conn
 
