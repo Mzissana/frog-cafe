@@ -66,7 +66,7 @@ export const login = ({ username, password }) =>
   });
 
 // Menu endpoints
-export const getMenu = () => api.get("/api/menu");
+export const getMenu = () => api.get("/api/menu/");
 export const createMenuItem = (data) => api.post("/api/menu", data);
 export const updateMenuItem = (id, data) => api.put(`/api/menu/${id}`, data);
 export const deleteMenuItem = (id) => api.delete(`/api/menu/${id}`);
@@ -79,12 +79,12 @@ export const removeFromCart = (orderId, menuItemId) =>
   api.delete(`/api/cart/${orderId}/${menuItemId}`);
 
 // Orders endpoints
-export const createOrder = (data) => api.post("/api/orders", data);
-export const getOrders = () => api.get("/api/orders");
+export const createOrder = (data) => api.post("/api/orders/", data);
+export const getOrders = () => api.get("/api/orders/");
 export const updateOrderStatus = (id, status) =>
   api.put(`/api/orders/${id}/status`, { status_id: status });
 export const deleteOrder = (id) => api.delete(`/api/orders/${id}`);
-export const clearOrders = () => api.delete("/api/orders");
+export const clearOrders = () => api.delete("/api/orders/");
 
 // Toads endpoints
 export const getToads = () => api.get("/api/toads");
