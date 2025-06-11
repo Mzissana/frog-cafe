@@ -29,7 +29,7 @@ const Admin = () => {
     const fetchData = async () => {
       try {
         if (!isAuthenticated()) {
-          navigate("/login");
+          navigate("/");
           return;
         }
         const [ordersResponse, menuResponse] = await Promise.all([
@@ -61,7 +61,7 @@ const Admin = () => {
       } catch (err) {
         console.error("Error fetching data:", err);
         if (err.response?.status === 401) {
-          navigate("/login");
+          navigate("/");
         } else {
           setError("Ошибка при загрузке данных");
         }

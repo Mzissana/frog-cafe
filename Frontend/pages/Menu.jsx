@@ -18,7 +18,7 @@ export default function Menu() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate("/login");
+      navigate("/");
       return;
     }
 
